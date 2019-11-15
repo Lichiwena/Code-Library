@@ -1,17 +1,17 @@
-/* Indeholder switch, printfunktioner og total score (score_board array) */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
 
 #define DIE_MAX_EYES 6
+#define BONUS 50
 
 void Roll_Multiple_Dice(int n, int dice_rolls[]);
 void Print_Dice_Rolls_Array(int n, int dice_rolls[]);
 void Print_New_Line_in_Table(void);
 void Sum_of_Scoreboard(int round_number, int score, int score_board[]);
 void Print_Sum_of_Scoreboard(int score_board[]);
+void Check_for_Bonus(int score_board[]);
 void Play_Yatzy(int n, int dice_rolls[], int score_board[]);
 void Find_Numbers_One_to_Six(int n, int dice_rolls[], int round_number, int score_board[]);
 void Find_One_Pair(int n, int dice_rolls[], int round_number, int score_board[]);
@@ -94,8 +94,7 @@ void Print_Dice_Rolls_Array(int n, int dice_rolls[])
     printf(" ||");
 }
 
-/* Denne funktion indkapsler mit Yatzy spil. Dette gøres vha. en switch, som switcher på
-   den pågældende rundes nummer og kalder dertilhørende funktion. */
+/* Denne funktion printer en ny linje i tabellen. */
 void Print_New_Line_in_Table(void)
 {
     printf("_____________________________________________________________________\n");
@@ -110,11 +109,26 @@ void Sum_of_Scoreboard(int round_number, int score, int score_board[])
     score_board[0] = (score_board[0] + score);
 }
 
+/* Denne funktion printer den totale sum af scoreboardet. */
 void Print_Sum_of_Scoreboard(int score_board[])
 {
     printf("Your total score is: %d \n", score_board[0]);
 }
 
+/* Denne funktion tjekker, om der er bonus efter de første seks runder af spillet. */
+void Check_for_Bonus(int score_board[])
+{
+    if (score_board[0] >= 63)
+    {
+        printf("You earned %d points in the first six rounds, resulting in 50 bonus points!\n", score_board[0]);
+        score_board[0] = score_board[0] + BONUS;
+    } else {
+        printf("You earned %d points which does not earn you a bonus this time around \n", score_board[0]);
+    }
+}
+
+/* Denne funktion indkapsler mit Yatzy spil. Dette gøres vha. en switch, som switcher på
+   den pågældende rundes nummer og kalder dertilhørende funktion. */
 void Play_Yatzy(int n, int dice_rolls[], int score_board[])
 {
     int round_number = 1;
@@ -130,44 +144,46 @@ void Play_Yatzy(int n, int dice_rolls[], int score_board[])
         switch (round_number)
         {
             case Ones: case Twos: case Threes: case Fours: case Fives: case Sixes:
-                printf("|| Round number %2d ", round_number);
+                printf("|| Round number %4d ", round_number);
                 Find_Numbers_One_to_Six(n, dice_rolls, round_number, score_board);
                 break;
             case One_Pair:
                 Print_New_Line_in_Table();
-                printf("|| Round number %2d ", round_number);
+                Check_for_Bonus(score_board);
+                Print_New_Line_in_Table();
+                printf("|| Round number %4d ", round_number);
                 Find_One_Pair(n, dice_rolls, round_number, score_board);
                 break;
             case Two_Pairs:
-                printf("|| Round number %2d ", round_number);
+                printf("|| Round number %4d ", round_number);
                 Find_Two_Pairs(n, dice_rolls, round_number, score_board);
                 break;
             case Three_of_a_Kind:
-                printf("|| Round number %2d ", round_number);
+                printf("|| Round number %4d ", round_number);
                 Find_Three_of_a_Kind(n, dice_rolls, round_number, score_board);
                 break;
             case Four_of_a_Kind:
-                printf("|| Round number %2d ", round_number);
+                printf("|| Round number %4d ", round_number);
                 Find_Four_of_a_Kind(n, dice_rolls, round_number, score_board);
                 break;
             case Small_Straight:
-                printf("|| Round number %2d ", round_number);
+                printf("|| Round number %4d ", round_number);
                 Check_for_Small_Straight(n, dice_rolls, round_number, score_board);
                 break;
             case Big_Straight:
-                printf("|| Round number %2d ", round_number);
+                printf("|| Round number %4d ", round_number);
                 Check_for_Big_Straight(n, dice_rolls, round_number, score_board);
                 break;
             case Full_House:
-                printf("|| Round number %2d ", round_number);
+                printf("|| Round number %4d ", round_number);
                 Check_for_Full_House(n, dice_rolls, round_number, score_board);
                 break;
             case Chance:
-                printf("|| Round number %2d ", round_number);
+                printf("|| Round number %4d ", round_number);
                 Find_Chance(n, dice_rolls, round_number, score_board);
                 break;
             case Yatzy:
-                printf("|| Round number %2d ", round_number);
+                printf("|| Round number %4d ", round_number);
                 Check_for_Yatzy(n, dice_rolls, round_number, score_board);
                 break;
         }
@@ -178,7 +194,8 @@ void Play_Yatzy(int n, int dice_rolls[], int score_board[])
 void Find_Numbers_One_to_Six(int n, int dice_rolls[], int round_number, int score_board[])
 {
     int i = 0, 
-        score = 0;
+        score = 0,
+        selected_amount_of_dice = 0;
 
     Roll_Multiple_Dice(n, dice_rolls);   
 
@@ -192,6 +209,11 @@ void Find_Numbers_One_to_Six(int n, int dice_rolls[], int round_number, int scor
         if (dice_rolls[i] == round_number)
         {
             score = score + round_number;
+            selected_amount_of_dice = selected_amount_of_dice + 1;
+            if (selected_amount_of_dice == 5)
+            {
+                i = n; /* Breaker ud af mit loop ved 5 fundne terninger */
+            }
         }
     }  
 
@@ -202,7 +224,7 @@ void Find_Numbers_One_to_Six(int n, int dice_rolls[], int round_number, int scor
         {
             printf("%d ", dice_rolls[i]);
         }
-    printf("|| Points this round: %2d ||\n", score);
+    printf("|| Points this round: %4d ||\n", score);
 
     Sum_of_Scoreboard(round_number, score, score_board);
 }
@@ -235,14 +257,14 @@ void Find_One_Pair(int n, int dice_rolls[], int round_number, int score_board[])
             if(dice_rolls[i] == dice_rolls[i - 1])
             {
                 score = (dice_rolls[i] * 2);
-                printf(" Points this round: %2d ||\n", score);
+                printf(" Points this round: %4d ||\n", score);
                 pair = 1;
                 i = 0;
             }
         }
     if (pair != 1)
     {
-        printf(" Points this round: %2d ||\n", score);
+        printf(" Points this round: %4d ||\n", score);
     }
     Sum_of_Scoreboard(round_number, score, score_board);
 }
@@ -274,14 +296,14 @@ void Find_Two_Pairs(int n, int dice_rolls[], int round_number, int score_board[]
             
             if (pairs == 2)
             {
-                printf(" Points this round: %2d ||\n", score);
+                printf(" Points this round: %4d ||\n", score);
                 i = 0;
             }
         }
     if (pairs != 2)
     {
         score = 0;
-        printf(" Points this round: %2d ||\n", score);
+        printf(" Points this round: %4d ||\n", score);
     }
     Sum_of_Scoreboard(round_number, score, score_board);
 }
@@ -309,7 +331,7 @@ void Find_Three_of_a_Kind(int n, int dice_rolls[], int round_number, int score_b
             i = 0;
         }
     } 
-    printf(" Points this round: %2d ||\n", score);
+    printf(" Points this round: %4d ||\n", score);
 
     Sum_of_Scoreboard(round_number, score, score_board);
 }
@@ -333,7 +355,7 @@ void Find_Four_of_a_Kind(int n, int dice_rolls[], int round_number, int score_bo
             i = 0;
         }
     } 
-    printf(" Points this round: %2d ||\n", score);
+    printf(" Points this round: %4d ||\n", score);
 
     Sum_of_Scoreboard(round_number, score, score_board);
 }
@@ -382,7 +404,7 @@ void Check_for_Small_Straight(int n, int dice_rolls[], int round_number, int sco
             i = n;
         }
     }
-    printf(" Points this round: %2d ||\n", score);
+    printf(" Points this round: %4d ||\n", score);
 
     Sum_of_Scoreboard(round_number, score, score_board);
 }
@@ -431,7 +453,7 @@ void Check_for_Big_Straight(int n, int dice_rolls[], int round_number, int score
             i = n;
         }
     }
-    printf(" Points this round: %2d ||\n", score);
+    printf(" Points this round: %4d ||\n", score);
 
     Sum_of_Scoreboard(round_number, score, score_board);
 }
@@ -474,10 +496,10 @@ void Check_for_Full_House(int n, int dice_rolls[], int round_number, int score_b
     
     if ((three_of_a_kind_number != 0) && (found_a_pair == 1))
     {
-        printf(" Points this round: %2d ||\n", score);
+        printf(" Points this round: %4d ||\n", score);
     } else {
         score = 0;
-        printf(" Points this round: %2d ||\n", score);
+        printf(" Points this round: %4d ||\n", score);
     }
     Sum_of_Scoreboard(round_number, score, score_board);
 }
@@ -503,7 +525,7 @@ void Find_Chance(int n, int dice_rolls[], int round_number, int score_board[])
         øjne på terningen, for hver gang, for-loopet kører. */
         score = score + dice_rolls[i]; 
     }
-    printf(" Points this round: %2d ||\n", score);
+    printf(" Points this round: %4d ||\n", score);
 
     Sum_of_Scoreboard(round_number, score, score_board);
 }
@@ -524,11 +546,11 @@ void Check_for_Yatzy(int n, int dice_rolls[], int round_number, int score_board[
     {
         if (dice_rolls[i] == dice_rolls[i - 4]) 
         {
-            score = 50 + (dice_rolls[i] * 5);
+            score = (dice_rolls[i] * 5) + BONUS;
             i = 0;
         }
     } 
-    printf(" Points this round: %2d ||\n", score);
+    printf(" Points this round: %4d ||\n", score);
 
     Sum_of_Scoreboard(round_number, score, score_board);
 }
