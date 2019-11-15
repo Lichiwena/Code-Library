@@ -1,6 +1,3 @@
-/* Min aflevering, som kan alt bortset fra at printe score og bonus.
-   Aflevering uden switch. */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -11,6 +8,7 @@
 void Roll_Multiple_Dice(int n, int dice_rolls[]);
 void Print_Dice_Rolls_Array(int n, int dice_rolls[]);
 void Print_New_Line_in_Table(void);
+void Play_Yatzy(int n, int dice_rolls[]);
 void Find_Numbers_One_to_Six(int n, int dice_rolls[], int number_I_want_to_find);
 void Find_One_Pair(int n, int dice_rolls[]);
 void Find_Two_Pairs(int n, int dice_rolls[]);
@@ -29,6 +27,7 @@ int main(void)
         score = 0,
         number_I_want_to_find = 0;
     int *dice_rolls = 0;
+    int *score_board = 0;
     char play_again = 'a';
 
     srand(time(NULL));
@@ -45,25 +44,15 @@ int main(void)
 
             /* Her allokeres space til mit array via calloc og pladsen assignes til arrayet dice_rolls. */
             dice_rolls = calloc(n, sizeof(int));
+            
+            /* Her allokeres space til mit scoreboard array, som skal være 16 pladser stort.
+               Disse pladser har størrelsen af int-værdier. Der skal være 16, da jeg skal 
+               kunne gemme værdien for 15 runders score + en samlet sum til sidst.        */
+            score_board = calloc(16, sizeof(int));
 
             Print_New_Line_in_Table();
-
-            for (number_I_want_to_find = 1; number_I_want_to_find <= 6; ++number_I_want_to_find)
-            {
-                Find_Numbers_One_to_Six(n, dice_rolls, number_I_want_to_find);
-            }
-
+            Play_Yatzy(n, dice_rolls);
             Print_New_Line_in_Table();
-
-            Find_One_Pair(n, dice_rolls);
-            Find_Two_Pairs(n, dice_rolls);
-            Find_Three_of_a_Kind(n, dice_rolls);
-            Find_Four_of_a_Kind(n, dice_rolls);
-            Check_for_Small_Straight(n, dice_rolls);
-            Check_for_Big_Straight(n, dice_rolls);
-            Check_for_Full_House(n, dice_rolls);
-            Find_Chance(n, dice_rolls);
-            Check_for_Yatzy(n, dice_rolls);
 
         printf("\nWould you like to play again? Press 'y' for yes and 'n' for no.\n");
         scanf(" %c", &play_again);
@@ -101,9 +90,70 @@ void Print_Dice_Rolls_Array(int n, int dice_rolls[])
     printf(" ||");
 }
 
+/* Denne funktion indkapsler mit Yatzy spil. Dette gøres vha. en switch, som switcher på
+   den pågældende rundes nummer og kalder dertilhørende funktion. */
 void Print_New_Line_in_Table(void)
 {
-    printf("-------------------------------------------------------\n");
+    printf("_____________________________________________________________________\n");
+}
+
+void Play_Yatzy(int n, int dice_rolls[])
+{
+    int round_number = 1;
+
+    /* Her laver jeg en enum, så mine cases ikke blot får navnene 0, 1, 2, ...,. Dette giver
+       mig et bedre overblik over, hvilken case der gør hvad. */
+    enum Yatzy_Rounds {Ones = 1, Twos, Threes, Fours, Fives, Sixes, One_Pair, Two_Pairs,
+                       Three_of_a_Kind, Four_of_a_Kind, Small_Straight, Big_Straight,
+                       Full_House, Chance, Yatzy};
+
+    for (round_number = 1; round_number <= 15; ++round_number)
+    {
+        switch (round_number)
+        {
+            case Ones: case Twos: case Threes: case Fours: case Fives: case Sixes:
+                printf("|| Round number %2d ", round_number);
+                Find_Numbers_One_to_Six(n, dice_rolls, round_number);
+                break;
+            case One_Pair:
+                Print_New_Line_in_Table();
+                printf("|| Round number %2d ", round_number);
+                Find_One_Pair(n, dice_rolls);
+                break;
+            case Two_Pairs:
+                printf("|| Round number %2d ", round_number);
+                Find_Two_Pairs(n, dice_rolls);
+                break;
+            case Three_of_a_Kind:
+                printf("|| Round number %2d ", round_number);
+                Find_Three_of_a_Kind(n, dice_rolls);
+                break;
+            case Four_of_a_Kind:
+                printf("|| Round number %2d ", round_number);
+                Find_Four_of_a_Kind(n, dice_rolls);
+                break;
+            case Small_Straight:
+                printf("|| Round number %2d ", round_number);
+                Check_for_Small_Straight(n, dice_rolls);
+                break;
+            case Big_Straight:
+                printf("|| Round number %2d ", round_number);
+                Check_for_Big_Straight(n, dice_rolls);
+                break;
+            case Full_House:
+                printf("|| Round number %2d ", round_number);
+                Check_for_Full_House(n, dice_rolls);
+                break;
+            case Chance:
+                printf("|| Round number %2d ", round_number);
+                Find_Chance(n, dice_rolls);
+                break;
+            case Yatzy:
+                printf("|| Round number %2d ", round_number);
+                Check_for_Yatzy(n, dice_rolls);
+                break;
+        }
+    }
 }
 
 /* Denne funktion kører de første 6 runder af spillet. */
@@ -134,7 +184,7 @@ void Find_Numbers_One_to_Six(int n, int dice_rolls[], int number_I_want_to_find)
         {
             printf("%d ", dice_rolls[i]);
         }
-    printf("|| Points this round: %d ||\n", score);
+    printf("|| Points this round: %2d ||\n", score);
 }
 
 /* Denne funktion finder et par. Først bruges qsort til at sortere 
@@ -163,14 +213,14 @@ void Find_One_Pair(int n, int dice_rolls[])
         {
             if(dice_rolls[i] == dice_rolls[i - 1])
             {
-                printf(" Points this round: %d ||\n", (dice_rolls[i] * 2));
+                printf(" Points this round: %2d ||\n", (dice_rolls[i] * 2));
                 pair = 1;
                 i = 0;
             }
         }
     if (pair != 1)
     {
-        printf(" Points this round: 0 ||\n");
+        printf(" Points this round:  0 ||\n");
     }
 }
 
@@ -201,13 +251,13 @@ void Find_Two_Pairs(int n, int dice_rolls[])
             
             if (pairs == 2)
             {
-                printf(" Points this round: %d ||\n", score);
+                printf(" Points this round: %2d ||\n", score);
                 i = 0;
             }
         }
     if (pairs != 2)
     {
-        printf(" Points this round: 0 ||\n");
+        printf(" Points this round:  0 ||\n");
     }
 }
 
@@ -234,7 +284,7 @@ void Find_Three_of_a_Kind(int n, int dice_rolls[])
             i = 0;
         }
     } 
-    printf(" Points this round: %d ||\n", score);
+    printf(" Points this round: %2d ||\n", score);
 }
 
 void Find_Four_of_a_Kind(int n, int dice_rolls[])
@@ -256,7 +306,7 @@ void Find_Four_of_a_Kind(int n, int dice_rolls[])
             i = 0;
         }
     } 
-    printf(" Points this round: %d ||\n", score);
+    printf(" Points this round: %2d ||\n", score);
 }
 
 void Check_for_Small_Straight(int n, int dice_rolls[])
@@ -303,7 +353,7 @@ void Check_for_Small_Straight(int n, int dice_rolls[])
             i = n;
         }
     }
-    printf(" Points this round: %d ||\n", score);
+    printf(" Points this round: %2d ||\n", score);
 }
 
 void Check_for_Big_Straight(int n, int dice_rolls[])
@@ -350,7 +400,7 @@ void Check_for_Big_Straight(int n, int dice_rolls[])
             i = n;
         }
     }
-    printf(" Points this round: %d ||\n", score);
+    printf(" Points this round: %2d ||\n", score);
 }
 
 void Check_for_Full_House(int n, int dice_rolls[])
@@ -391,10 +441,10 @@ void Check_for_Full_House(int n, int dice_rolls[])
     
     if ((three_of_a_kind_number != 0) && (found_a_pair == 1))
     {
-        printf(" Points this round: %d ||\n", score);
+        printf(" Points this round: %2d ||\n", score);
     } else {
         score = 0;
-        printf(" Points this round: %d ||\n", score);
+        printf(" Points this round: %2d ||\n", score);
     }
 }
 
@@ -419,7 +469,7 @@ void Find_Chance(int n, int dice_rolls[])
         øjne på terningen, for hver gang, for-loopet kører. */
         score = score + dice_rolls[i]; 
     }
-    printf(" Points this round: %d ||\n", score);
+    printf(" Points this round: %2d ||\n", score);
 }
 
 /* Denne funktion finder ud af, om der er 5 ens vha. qsort. */
@@ -442,7 +492,7 @@ void Check_for_Yatzy(int n, int dice_rolls[])
             i = 0;
         }
     } 
-    printf(" Points this round: %d ||\n", score);
+    printf(" Points this round: %2d ||\n", score);
 }
 
 /* Kurts element compare funktion. */
