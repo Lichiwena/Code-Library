@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAX_NUMER_OF_CARDS 55
+#define MAX_NUMBER_OF_CARDS 55
 
 enum color {Clubs = 1, Diamonds, Hearts, Spades, No_color};
 enum card_number {Two = 2, Three, Four, Five, Six, Seven, Eight, Nine, Ten,
@@ -20,27 +20,39 @@ void fill_in_cards (deck_of_cards card_game_array[]);
 void fill_in_Jokers (deck_of_cards card_game_array[]);
 void print_cards(deck_of_cards card_game_array[]);
 void print_Jokers(deck_of_cards card_game_array[]);
+void print_new_line(void);
 char *convert_color_to_string(int color);
 char *convert_card_number_to_string(int card_number);
+void randomize_cards(deck_of_cards* card_game_array);
+void sort_cards(deck_of_cards* card_game_array);
 int element_compare_color(const void *color_a, const void *color_b);
-int element_compare(const void *ip1, const void *ip2);
+int element_compare_random(const void *ip1, const void *ip2);
 
 int main(void)
 {
     deck_of_cards* card_game_array = NULL;
 
-        Clear_Screen();
-        printf("*** CARD SORT ***\n\n");
-        printf("This program sorts a set of ordinary playing cards with 3 Jokers!\n");
+    srand(time(NULL));
 
-        /* Her allokeres plads til mit card_game_array array. Denne får 55 pladser
-           og det bliver at størrelsen af mit struct.                        */
-        card_game_array = calloc(MAX_NUMER_OF_CARDS, sizeof(deck_of_cards));
+    Clear_Screen();
+    printf("*** CARD SORT ***\n\n");
+    printf("This program sorts a set of ordinary playing cards with 3 Jokers!\n");
 
-        fill_in_cards(card_game_array);
-        fill_in_Jokers(card_game_array);
-        print_cards(card_game_array);
-        print_Jokers(card_game_array);
+    /* Her allokeres plads til mit card_game_array array. Denne får 55 pladser
+       og det bliver at størrelsen af mit struct.                        */
+    card_game_array = calloc(MAX_NUMBER_OF_CARDS, sizeof(deck_of_cards));
+
+    fill_in_cards(card_game_array);
+    fill_in_Jokers(card_game_array);
+    
+    print_new_line();
+    printf("These are the unsorted cards:");
+    print_new_line();
+    randomize_cards(card_game_array);
+    print_new_line();
+    printf("These are the sorted cards:");
+    print_new_line();
+    sort_cards(card_game_array);
 
     printf("Thanks for playing Card Sort!\n");
 
@@ -85,7 +97,7 @@ void print_cards(deck_of_cards card_game_array[])
 {
     int i = 1;
 
-    for (i = 1; i < (MAX_NUMER_OF_CARDS - 3); ++i)
+    for (i = 1; i < (MAX_NUMBER_OF_CARDS - 3); ++i)
     {
         printf("Card is: %s of %s\n",
         convert_card_number_to_string(card_game_array[i].card_number),
@@ -97,12 +109,17 @@ void print_Jokers(deck_of_cards card_game_array[])
 {
     int i = 15;
 
-    for (i = 52; i < MAX_NUMER_OF_CARDS; ++i)
+    for (i = 52; i < MAX_NUMBER_OF_CARDS; ++i)
     {
         printf("Card is: %s %s\n",
         convert_card_number_to_string(card_game_array[i].card_number),
         convert_color_to_string(card_game_array[i].color));
     }
+}
+
+void print_new_line(void)
+{
+    printf("\n--------------------------\n");
 }
 
 char *convert_color_to_string(int color)
@@ -184,16 +201,30 @@ char *convert_card_number_to_string(int card_number)
     return card_number_as_string;
 }
 
-/* Kurts element compare funktion. */
-int element_compare(const void *ip1, const void *ip2)
+void randomize_cards(deck_of_cards* card_game_array)
 {
-    int result;
-    int *ipi1 = (int *)ip1,
-        *ipi2 = (int *)ip2;
+    qsort(card_game_array, 55, sizeof(deck_of_cards), element_compare_random);
 
-    if (*ipi1 < *ipi2)
+    print_cards(card_game_array);
+    print_Jokers(card_game_array);
+}
+
+void sort_cards(deck_of_cards* card_game_array)
+{
+    qsort(card_game_array, 55, sizeof(deck_of_cards), element_compare_color);
+
+    print_cards(card_game_array);
+    print_Jokers(card_game_array);
+}
+
+/* Kurts element compare funktion, men randomized. */
+int element_compare_random(const void *ip1, const void *ip2)
+{
+    int result = 0;
+
+    if (rand() < (RAND_MAX / 2))
         result = -1;
-    else if (*ipi1 > *ipi2)
+    else if (rand() > (RAND_MAX / 2))
         result = 1;
     else
         result = 0;

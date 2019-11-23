@@ -2,11 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAX_NUMER_OF_CARDS 55
-
-enum color {Clubs = 1, Diamonds, Hearts, Spades, No_color};
-enum card_number {Two = 2, Three, Four, Five, Six, Seven, Eight, Nine, Ten,
-                  Jack = 11, Queen = 12, King = 13, Ace = 14, Joker = 15};
+#define MAX_NUMBER_OF_CARDS 55
 
 typedef struct /* Her typedeffer jeg min struct til blot at hedde "deck_of_cards" fremover */
 {
@@ -14,33 +10,47 @@ typedef struct /* Her typedeffer jeg min struct til blot at hedde "deck_of_cards
     int card_number;
 } deck_of_cards;
 
+enum color {Clubs = 1, Diamonds, Hearts, Spades, No_color};
+enum card_number {Two = 2, Three, Four, Five, Six, Seven, Eight, Nine, Ten,
+                  Jack = 11, Queen = 12, King = 13, Ace = 14, Joker = 15};
+
 void Clear_Screen(void);
 deck_of_cards generate_card_struct (int color, int i);
 void fill_in_cards (deck_of_cards card_game_array[]);
 void fill_in_Jokers (deck_of_cards card_game_array[]);
 void print_cards(deck_of_cards card_game_array[]);
 void print_Jokers(deck_of_cards card_game_array[]);
+void print_new_line(void);
 char *convert_color_to_string(int color);
 char *convert_card_number_to_string(int card_number);
+void randomize_cards(deck_of_cards* card_game_array);
+void sort_cards(deck_of_cards* card_game_array);
 int element_compare_color(const void *color_a, const void *color_b);
-int element_compare(const void *ip1, const void *ip2);
+int element_compare_random(const void *ip1, const void *ip2);
 
 int main(void)
 {
     deck_of_cards* card_game_array = NULL;
 
-        Clear_Screen();
-        printf("*** CARD SORT ***\n\n");
-        printf("This program sorts a set of ordinary playing cards with 3 Jokers!\n");
+    srand(time(NULL));
 
-        /* Her allokeres plads til mit card_game_array array. Denne får 55 pladser
-           og det bliver at størrelsen af mit struct.                        */
-        card_game_array = calloc(MAX_NUMER_OF_CARDS, sizeof(deck_of_cards));
+    Clear_Screen();
+    printf("*** CARD SORT ***\n\n");
+    printf("This program sorts a set of ordinary playing cards with 3 Jokers!\n");
 
-        fill_in_cards(card_game_array);
-        fill_in_Jokers(card_game_array);
-        print_cards(card_game_array);
-        print_Jokers(card_game_array);
+    card_game_array = calloc(MAX_NUMBER_OF_CARDS, sizeof(deck_of_cards));
+
+    fill_in_cards(card_game_array);
+    fill_in_Jokers(card_game_array);
+    
+    print_new_line();
+    printf("These are the unsorted cards:");
+    print_new_line();
+    randomize_cards(card_game_array);
+    print_new_line();
+    printf("These are the sorted cards:");
+    print_new_line();
+    sort_cards(card_game_array);
 
     printf("Thanks for playing Card Sort!\n");
 
@@ -49,6 +59,7 @@ int main(void)
     return (0);
 }
 
+/* Denne funktion genererer mine kort i et struct. */
 deck_of_cards generate_card_struct (int color, int i)
 {
     deck_of_cards generated_card;
@@ -68,7 +79,7 @@ void fill_in_cards (deck_of_cards card_game_array[])
         card_game_array[i     ] = generate_card_struct(1, (i + 1));
         card_game_array[i + 13] = generate_card_struct(2, (i + 1));
         card_game_array[i + 26] = generate_card_struct(3, (i + 1));
-        card_game_array[i + 38] = generate_card_struct(4, (i + 1));
+        card_game_array[i + 39] = generate_card_struct(4, (i + 1));
     }
 }
 
@@ -81,30 +92,59 @@ void fill_in_Jokers (deck_of_cards card_game_array[])
     card_game_array[i + 40] = generate_card_struct(5, (i + 1));
 }
 
+/* Denne funktion printer mine kort fra 1-52. */
 void print_cards(deck_of_cards card_game_array[])
 {
     int i = 1;
 
-    for (i = 1; i < (MAX_NUMER_OF_CARDS - 3); ++i)
+    for (i = 0; i < (MAX_NUMBER_OF_CARDS - 3); ++i)
     {
-        printf("Card is: %s of %s\n",
-        convert_card_number_to_string(card_game_array[i].card_number),
-        convert_color_to_string(card_game_array[i].color));
+        if (card_game_array[i].color != 5)
+        {
+            printf("Card is: %s of %s\n",
+            convert_card_number_to_string(card_game_array[i].card_number),
+            convert_color_to_string(card_game_array[i].color));
+
+        } else {
+            printf("Card is: %s %s\n",
+            convert_card_number_to_string(card_game_array[i].card_number),
+            convert_color_to_string(card_game_array[i].color));           
+        }
     }
 }
 
+/* Denne funktion printer de kort, som er på de tre sidste pladser. Det
+   vil sige jokerne i det sorterede array, herfra navnet "print_Jokers".
+   (Selvom det ikke nødvendigvis er jokere i det usorterede array). */
 void print_Jokers(deck_of_cards card_game_array[])
 {
-    int i = 15;
+    int i = 1;
 
-    for (i = 52; i < MAX_NUMER_OF_CARDS; ++i)
+    for (i = 52; i < MAX_NUMBER_OF_CARDS; ++i)
     {
-        printf("Card is: %s %s\n",
-        convert_card_number_to_string(card_game_array[i].card_number),
-        convert_color_to_string(card_game_array[i].color));
+        if (card_game_array[i].color != 5)
+        {
+            printf("Card is: %s of %s\n",
+            convert_card_number_to_string(card_game_array[i].card_number),
+            convert_color_to_string(card_game_array[i].color));
+
+        } else {
+            printf("Card is: %s %s\n",
+            convert_card_number_to_string(card_game_array[i].card_number),
+            convert_color_to_string(card_game_array[i].color));           
+        }
     }
 }
 
+/* Printer ny linje i min oversigt. */
+void print_new_line(void)
+{
+    printf("\n--------------------------\n");
+}
+
+/* Denne funktion switcher på color_number (color fra min struct),
+   og oversætter nummeret til en string. F.eks., hvis color er 1,
+   som i min enum er lavet til "Clubs", så returneres "Clubs".     */
 char *convert_color_to_string(int color)
 {
     char* color_number_as_string = (char *)calloc(8, sizeof(char));
@@ -131,6 +171,8 @@ char *convert_color_to_string(int color)
     return color_number_as_string;
 }
 
+/* Denne funktion gør det samme som ovenstående funktion, men med
+   card_number i stedet for. */
 char *convert_card_number_to_string(int card_number)
 {
     char* card_number_as_string = (char *)calloc(8, sizeof(char));
@@ -184,16 +226,33 @@ char *convert_card_number_to_string(int card_number)
     return card_number_as_string;
 }
 
-/* Kurts element compare funktion. */
-int element_compare(const void *ip1, const void *ip2)
+/* Denne funktion randomizer mine kort ved at bruge den random
+   element compare funktion. Den random rækkefølge af kort printes. */
+void randomize_cards(deck_of_cards* card_game_array)
 {
-    int result;
-    int *ipi1 = (int *)ip1,
-        *ipi2 = (int *)ip2;
+    qsort(card_game_array, MAX_NUMBER_OF_CARDS, sizeof(deck_of_cards), element_compare_random);
 
-    if (*ipi1 < *ipi2)
+    print_cards(card_game_array);
+    print_Jokers(card_game_array);
+}
+
+/* Denne funktion sorterer mine kort og printer dem herefter. */
+void sort_cards(deck_of_cards* card_game_array)
+{
+    qsort(card_game_array, MAX_NUMBER_OF_CARDS, sizeof(deck_of_cards), element_compare_color);
+
+    print_cards(card_game_array);
+    print_Jokers(card_game_array);
+}
+
+/* Kurts element compare funktion, men randomized. */
+int element_compare_random(const void *ip1, const void *ip2)
+{
+    int result = 0;
+
+    if (rand() < (RAND_MAX / 2))
         result = -1;
-    else if (*ipi1 > *ipi2)
+    else if (rand() > (RAND_MAX / 2))
         result = 1;
     else
         result = 0;
