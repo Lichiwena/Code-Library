@@ -28,7 +28,9 @@ typedef struct
     int  goal_difference;
 } team_struct;
 
-enum team_name {AaB = 1, ACH, AGF, BIF, EFB, FCK, FCM, FCN, HOB, OB, RFC, SDR, VB, VEN}
+enum team_name {AaB = 1, ACH, AGF, BIF, EFB, FCK, FCM, FCN, HOB, OB, RFC, SDR, VB, VEN};
+
+void fill_in_team_array(team_struct team_array, match_struct current_match);
 
 int main(void)
 {   
@@ -66,6 +68,8 @@ int main(void)
                    match_array[i].home_team_score,
                    match_array[i].away_team_score,
                    match_array[i].spectators );
+
+            fill_in_team_array(team_array[i], match_array[i]);
         }
     } else {
         printf("Something went wrong. Your desired file was not found. Please try again.\n");
@@ -74,15 +78,21 @@ int main(void)
     return (0);
 }
 
-void fill_in_team_array(team_struct team_array[], match_struct current_match)
+
+void fill_in_team_array(team_struct team_array, match_struct current_match)
 {
-    switch (team_name)
+    printf("Int is: %d\n", current_match.home_team_score);
+    printf("Char is: %s\n", current_match.home_team);
+
+    switch ((int)current_match.home_team)
     {
-        case AaB:
+        case (int)"AaB":
+            printf("Vi ramte rigtigt\n");
         break;
-        case ACH:
+        /*
+        case "ACH":
         break;
-        case AGF:
+        case "AGF":
         break;
         case BIF:
         break;
@@ -103,9 +113,11 @@ void fill_in_team_array(team_struct team_array[], match_struct current_match)
         case SDR:
         break;
         case  VB:
+        fill_in_team_struct("VB")
         break;
         case VEN:
+        fill_in_team_struct("VEN")
         break; 
+    */
     }
-
 }
