@@ -5,14 +5,12 @@
 
 /* Jeg har anvendt qsort som min foretrukne sorteringsalgoritme i denne aflevering. */ 
 
-/* Mangler: Print funktioner og qsort for at sortere stillingen. */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define MAX_STRING_LENGTH           6
-#define MAX_CURRENT_STRING_LENGTH  60 /* 55 needed */
+#define MAX_CURRENT_STRING_LENGTH  60 
 #define TOTAL_MATCHES             182
 #define TOTAL_TEAMS                14
 #define HOME                        1
@@ -32,7 +30,7 @@ typedef struct
 
 typedef struct
 {
-    char team_name[4]; /* Max length of team name is 3 + \0 */
+    char team_name[4];
     int  points;
     int  goals_scored_by_team;
     int  goals_scored_vs_team;
@@ -42,27 +40,40 @@ typedef struct
 enum team_name {AaB_index = 0, ACH_index, AGF_index, BIF_index, EFB_index, FCK_index, FCM_index,
                 FCN_index, HOB_index, OB_index, RFC_index, SDR_index, VB_index, VEN_index};
 
-void fill_in_team(team_struct team_array[], match_struct current_match, int is_home, char *team_name);
+void read_data(match_struct match_array[]);
 void fill_in_team_array(team_struct team_array[], match_struct match_array[]);
+void fill_in_team(team_struct team_array[], match_struct current_match, int is_home, char *team_name);
 void update_team_score(team_struct team_array[], match_struct current_match, int is_home, int team_index);
 int  match_result(int team_a_goals, int team_b_goals);
 void fill_in_team_name(team_struct team_array[], char *team_name, int team_index);
+int  element_compare_teams(const void *team_a, const void *team_b);
 void print_table(team_struct team_array[]);
-int element_compare_teams(const void *team_a, const void *team_b);
 
 int main(void)
 {   
+    match_struct *match_array = calloc(sizeof(match_struct), TOTAL_MATCHES);
+    team_struct *team_array = calloc(sizeof(team_struct), TOTAL_TEAMS);
+
+    read_data(match_array);
+    fill_in_team_array(team_array, match_array);
+    qsort(team_array, 14, sizeof(team_struct), element_compare_teams);
+    print_table(team_array);
+
+    free(match_array);
+    free(team_array);
+
+    return (0);
+}
+
+/*Denne funktion læser filen "kampe2018-2019.txt" én linje af gangen. */
+void read_data(match_struct match_array[])
+{
     int i = 0;
     FILE *filepointer = fopen("kampe2018-2019.txt", "r");
-    match_struct match_array[TOTAL_MATCHES];
     char current_string[MAX_CURRENT_STRING_LENGTH];
-    team_struct team_array[20]; /* REE */
 
     if (filepointer != NULL)
     {      
-        /* f get s == file get string                                                            */
-        /* fgets læser ind til MAX_CURRENT_STRING_LENGTH på 60 eller til den finder en new line. */
-        /* While current_string != NULL står der basically                                       */
         while (fgets(current_string, MAX_CURRENT_STRING_LENGTH, filepointer) != NULL){
             sscanf(current_string, "%s %s %s %s - %s %d - %d %d",
                    match_array[i].day_of_week,
@@ -74,24 +85,32 @@ int main(void)
                    &match_array[i].away_team_score,
                    &match_array[i].spectators
                    );
-            /* [i] skal stå efter match_array, da man i match array'et kigger efter f.eks.  */
-            /* day_of_week på den i'de plads. F.eks. ville match_array[20].day_of_week være */
-            /* day_of_week på den 20'ende plads i arrayet (linje 20 i txt filen)            */
             ++i;
         }
     } else {
         printf("Something went wrong. Your desired file was not found. Please try again.\n");
     }
-
-    fill_in_team_array(team_array, match_array);
-    qsort(team_array, 14, sizeof(team_struct), element_compare_teams);
-    print_table(team_array);
-
     fclose(filepointer);
-
-    return (0);
 }
 
+/* Denne funktion fortæller min fill_in_team hvilket hold, den skal håndtere, */
+/* og om det er et home team eller et away team.                              */
+void fill_in_team_array(team_struct team_array[], match_struct match_array[])
+{
+    int i = 0;
+
+    for (i = 0; i < TOTAL_MATCHES; ++i)
+    {
+        /* Håndterer home team */
+        fill_in_team(team_array, match_array[i], HOME, match_array[i].home_team);
+
+        /* Håndterer away team */
+        fill_in_team(team_array, match_array[i], AWAY, match_array[i].away_team);
+    }
+}
+
+/* Denne funktion fylder mit team array ud ved at kalde de to funktioner update_team_score */
+/* og fill_in_team_name. */
 void fill_in_team(team_struct team_array[], match_struct current_match, int is_home, char *team_name)
 {
    if (strcmp("AaB", team_name) == 0) {
@@ -152,23 +171,8 @@ void fill_in_team(team_struct team_array[], match_struct current_match, int is_h
     }
 }
 
-void fill_in_team_array(team_struct team_array[], match_struct match_array[])
-{
-    int i = 0;
-
-    for (i = 0; i < TOTAL_MATCHES; ++i)
-    {
-        /* Håndterer home team */
-        fill_in_team(team_array, match_array[i], HOME, match_array[i].home_team);
-
-        /* Håndterer away team */
-        fill_in_team(team_array, match_array[i], AWAY, match_array[i].away_team);
-    }
-}
-
-/* Hvis is_home = 1, så er det fordi, holdet er hjemmebane. Hvis is_home = 0, så er det fordi holdet er */
-/* udebane. Herefter opdateres goals_scored_by_team, goals_scored_vs_team og goal_difference alt efter, */
-/* om holdet er ude eller hjemme. (Det er samme funktion med med "home" eller "away").                  */
+/* Denne funktion opdaterer holdets score for faktorerne point, mål scoret af hold, */
+/* mål scoret mod hold og målforskel.                                               */
 void update_team_score(team_struct team_array[], match_struct current_match, int is_home, int team_index)
 {
     if (is_home == 1)
@@ -186,6 +190,7 @@ void update_team_score(team_struct team_array[], match_struct current_match, int
     }
 }
 
+/* Denne funktion beregner, hvor mange point et hold skal have for en spillet kamp. */
 int match_result(int team_a_goals, int team_b_goals)
 {
     int result = 0;
@@ -203,18 +208,45 @@ int match_result(int team_a_goals, int team_b_goals)
     return result;
 }
 
-/* Hvis der ikke står noget i min team_struct på team_name pladsen, så fylder den navnet ind */
-/* på det pågældende hold med sammenhørende team_index. Kaldes fra if else-kæden, så hvis    */
-/* kaldt i "AaB", så fylder strcpy "AaB" ind på team_array[AaB].team_name pladsen.           */
+/* Denne funktion fylder holdnavnet på holdet i den pågældende string ind i mit team_array, */
+/* hvis den finder en tom string.                                                           */
 void fill_in_team_name(team_struct team_array[], char *team_name, int team_index)
 {
-    /* Hvis strcmp != 0 (som i at den ikke finder et team_name), så indsæt team_name på det index */
     if (strcmp(team_array[team_index].team_name, team_name) != 0)
     {
         strcpy(team_array[team_index].team_name, team_name);
     }
 }
 
+/* Denne funktion finder holdets position i Ligaen ved at se på faktorerne */
+/* point, målforskel, mål scoret af holdet og mål scoret mod holdet.       */
+int element_compare_teams(const void *team_a, const void *team_b)
+{
+    int result = 0;
+
+    team_struct *team_array_a = (team_struct *)team_a;
+    team_struct *team_array_b = (team_struct *)team_b;
+
+    if (team_array_a->points == team_array_b->points)
+    {
+        result = (team_array_a->goal_difference - team_array_b->goal_difference);
+
+        if (team_array_a->goal_difference == team_array_b->goal_difference)
+        {
+            result = (team_array_a->goals_scored_by_team - team_array_b->goals_scored_by_team);
+            
+            if (team_array_a->goals_scored_by_team == team_array_b->goals_scored_by_team)
+            {
+                result = (team_array_a->goals_scored_vs_team - team_array_b->goals_scored_vs_team);
+            }
+        }
+    } else {
+        result = (team_array_a->points - team_array_b->points);
+    }
+    return -result;
+}
+
+/* Denne funktion printer min tabel. */
 void print_table(team_struct team_array[])
 {
     int i = 0;
@@ -234,31 +266,4 @@ void print_table(team_struct team_array[])
                 team_array[i].goal_difference );
     }
     printf("-------------------------------------------------------------------\n");
-}
-
-/* En funktion, der finder holdets position i Ligaen. */
-int element_compare_teams(const void *team_a, const void *team_b)
-{
-    int result = 0;
-
-    team_struct *team_array_a = (team_struct *)team_a;
-    team_struct *team_array_b = (team_struct *)team_b;
-
-    if (team_array_a->points == team_array_b->points)
-    {
-        result = (team_array_a->goal_difference - team_array_b->goal_difference);
-        
-        if (team_array_a->goal_difference == team_array_b->goal_difference)
-        {
-            result = (team_array_a->goals_scored_by_team - team_array_b->goals_scored_by_team);
-            
-            if (team_array_a->goals_scored_by_team == team_array_b->goals_scored_by_team)
-            {
-                result = (team_array_a->goals_scored_vs_team - team_array_b->goals_scored_vs_team);
-            }
-        }
-    } else {
-        result = (team_array_a->points - team_array_b->points);
-    }
-    return -result;
 }
