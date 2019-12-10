@@ -38,4 +38,4 @@ void read_data(FILE *input, int databaseIndex);
 void make_ingredients(int databaseIndex, int ingredientsIndex);
 void print_grocery_list(FILE *shoppingList , ingredients ingredientsArray[MAX_ARRAY_LENGTH][MAX_CHAR_LENGTH]);
 void print_meal_plan(FILE *output, int weekdayIndex, int databaseIndex);
-int cmpfunc (const void *ingredient_a, const void *ingredient_b);
+int myCompare(const void *ingredient_a, const void *ingredient_b);

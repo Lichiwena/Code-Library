@@ -228,6 +228,23 @@ void print_grocery_list(FILE *shoppingList, ingredients ingredientsArray[MAX_ARR
             }   
         }   
     }
+
+    qsort(ingredientsArray, 15, sizeof(ingredients), myCompare);
+    
+    fprintf(shoppingList, "\n");
+    fprintf(shoppingList, "Sorteret array er: \n");
+    for (j = 0; j < 15; j++)
+    {
+        for (i = 0; i < 15; i++)
+        {
+            if (ingredientsArray[j][i].amount != 0)
+            {
+                fprintf(shoppingList, "%s ", ingredientsArray[j][i].name);
+                fprintf(shoppingList, "%.0lf ", ingredientsArray[j][i].amount);
+                fprintf(shoppingList, "%s\n", ingredientsArray[j][i].unit);
+            }   
+        }   
+    }
 }
 
 /*Funktion til at lave madplan filen*/
@@ -250,6 +267,7 @@ void print_meal_plan(FILE *output, int weekdayIndex, int databaseIndex){
     fprintf(output,"%s\n", database.title[databaseIndex]);
     fprintf(output,"%s\n", database.description[databaseIndex]);
     fprintf(output,"%s\n", database.ingredients[databaseIndex]);
+    
     if (database.vegetarian[databaseIndex] == FALSE)
     {
         fprintf(output,"Denne ret er ikke vegetarisk\n");
@@ -269,3 +287,19 @@ void print_meal_plan(FILE *output, int weekdayIndex, int databaseIndex){
     fprintf(output,"Prisklasse: %d\n", database.price[databaseIndex]);
     fprintf(output,"Tid: %d minutter\n", database.time[databaseIndex]);
 }
+
+// Defining comparator function as per the requirement 
+int myCompare(const void *ingredient_a, const void *ingredient_b) 
+{   
+    return strcmp(((ingredients *)ingredient_a)->name, ((ingredients *)ingredient_b)->name); 
+} 
+
+/* 
+static int myCompare(const void *ingredient_a, const void *ingredient_b) 
+{   
+    const ingredients *ingredientsArray_a = ingredient_a;
+    const ingredients *ingredientsArray_b = ingredient_b;
+
+    return strcmp(((ingredientsArray_a->name, ingredientsArray_b->name); 
+} 
+*/
