@@ -229,7 +229,7 @@ void print_grocery_list(FILE *shoppingList, ingredients ingredientsArray[MAX_ARR
         }   
     }
 
-    qsort(ingredientsArray, 15, sizeof(ingredients), myCompare);
+    qsort(ingredientsArray, MAX_ARRAY_LENGTH, (sizeof(char *)), myCompare);
     
     fprintf(shoppingList, "\n");
     fprintf(shoppingList, "Sorteret array er: \n");
@@ -288,18 +288,20 @@ void print_meal_plan(FILE *output, int weekdayIndex, int databaseIndex){
     fprintf(output,"Tid: %d minutter\n", database.time[databaseIndex]);
 }
 
+
+// Defining comparator function as per the requirement 
+int myCompare(const void *ingredient_a, const void *ingredient_b) 
+{   
+    char** p1 = (char**) ingredient_a;
+    char** p2 = (char**) ingredient_b;
+
+    return strcmp(*p1, *p2);
+}
+
+/*
 // Defining comparator function as per the requirement 
 int myCompare(const void *ingredient_a, const void *ingredient_b) 
 {   
     return strcmp(((ingredients *)ingredient_a)->name, ((ingredients *)ingredient_b)->name); 
-} 
-
-/* 
-static int myCompare(const void *ingredient_a, const void *ingredient_b) 
-{   
-    const ingredients *ingredientsArray_a = ingredient_a;
-    const ingredients *ingredientsArray_b = ingredient_b;
-
-    return strcmp(((ingredientsArray_a->name, ingredientsArray_b->name); 
-} 
-*/
+}
+ */
