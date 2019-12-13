@@ -348,7 +348,7 @@ void print_grocery_list(FILE *shoppingList, ingredients ingredientsArray[MAX_ARR
 /*Funktion til at udvaelge hvilken madplan der skal printes*/
 void print_meal_plan(FILE *output, int weekdayIndex, int databaseIndex, int numberOfRecipes){
     if ((settings.vegetarian == TRUE) && (settings.vegan == FALSE)){
-        print_vegetarian_meal_plan();
+        print_vegetarian_meal_plan(output, weekdayIndex, databaseIndex, numberOfRecipes);
     }
     else if (settings.vegan == TRUE){
         print_vegan_meal_plan(output, weekdayIndex, databaseIndex, numberOfRecipes);
@@ -358,11 +358,49 @@ void print_meal_plan(FILE *output, int weekdayIndex, int databaseIndex, int numb
     }
 }
 
-/*Printer en vegantarisk madplan*/
-void print_vegetarian_meal_plan(){
+/*Printer en vegetarisk madplan*/
+void print_vegetarian_meal_plan(FILE *output, int weekdayIndex, int databaseIndex, int numberOfRecipes){
     char weekdays[7][10] = {"Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Loerdag", "Soendag"};
+    int i = 0;
+    int *vegetarian_array = malloc(sizeof(int) * numberOfRecipes);
 
+    if ((weekdays[weekdayIndex] == weekdays[1]) || (weekdays[weekdayIndex] == weekdays[3])
+         || (weekdays[weekdayIndex] == weekdays[5]) || (weekdays[weekdayIndex] == weekdays[6])){
+        fprintf(output, "###############################################################\n");
+        fprintf(output, "########################### %s ###########################\n", weekdays[weekdayIndex]);
+        printf("###############################################################\n");
+        printf("########################### %s ###########################\n", weekdays[weekdayIndex]);
+    }
+    else{
+        fprintf(output, "###############################################################\n");
+        fprintf(output, "########################### %s ############################\n", weekdays[weekdayIndex]);
+        printf("###############################################################\n");
+        printf("########################### %s ############################\n", weekdays[weekdayIndex]);
+    }
 
+    for (i = 0; i < numberOfRecipes; ++i){
+        if (database.vegetarian[i] == TRUE){
+            vegetarian_array[i] = database.indexNumber[i];
+
+            printf("%s\n", database.title[vegetarian_array[i]]);
+            fprintf(output, "%s\n", database.title[vegetarian_array[i]]);
+            printf("%s\n", database.description[vegetarian_array[i]]);
+            fprintf(output, "%s\n", database.description[vegetarian_array[i]]);
+            printf("%s\n", database.ingredients[vegetarian_array[i]]);
+            fprintf(output, "%s\n", database.ingredients[vegetarian_array[i]]);
+            fprintf(output, "Denne ret er vegetarisk !!\n");
+            printf("Denne ret er vegetarisk!!\n");
+            printf("Prisklasse: %d\n", database.price[vegetarian_array[i]]);
+            fprintf(output, "Prisklasse: %d\n", database.price[vegetarian_array[i]]);
+            printf("Tid: %d minutter\n", database.time[vegetarian_array[i]]);
+            fprintf(output, "Tid: %d minutter\n", database.time[vegetarian_array[i]]);
+            
+            database.indexNumber[i]++;
+            i = numberOfRecipes;
+        }
+    }
+    
+    free(vegetarian_array);
 }
 
 /*Printer en vegansk madplan*/
@@ -397,8 +435,6 @@ void print_vegan_meal_plan(FILE *output, int weekdayIndex, int databaseIndex, in
             fprintf(output, "%s\n", database.ingredients[vegan_array[i]]);
             fprintf(output, "Denne ret er vegetarisk\n");
             printf("Denne ret er vegetarisk\n");
-            fprintf(output, "Denne ret er vegansk\n");
-            printf("Denne ret er vegansk\n");
             printf("Prisklasse: %d\n", database.price[vegan_array[i]]);
             fprintf(output, "Prisklasse: %d\n", database.price[vegan_array[i]]);
             printf("Tid: %d minutter\n", database.time[vegan_array[i]]);
