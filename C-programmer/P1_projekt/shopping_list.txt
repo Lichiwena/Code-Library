@@ -1,37 +1,47 @@
-Denne uges indkøbsliste:
-- Pasta 250 gram
-- Kyllingebryst 250 gram,
-- Broccoli 1 stk,
-- Karrysauce 3 dl
-- Burgerboller 4 stk
-- Oksekød 400 gram,
-- Ost 4 skiver,
-- Ketchup 1 flaske,
-- Salat 1 stk,
-- Tomater 2 stk
-- Nudler 250 gram
-- Løg 2 stk,
-- Forårsrulle-plader 1 pakke,
-- Bouillon 4 dl,
-- Margarine 20 gram,
-- Gulerødder 2 stk
-- Kartofler 500 gram
-- Porrer 3 stk,
-- Hvidløg 2 fed,
-- Grøntsagsbouillon 12 dl,
-- Soyamælk 1 dl
-- Æg 4 stk
-- Purløg 30 gram,
-- Cherrytomater 50 gram
-- Knorr-Tomatsuppe 1 pakke
-- Macaroni-nudler 100 gram,
-- Mælk 2 dl,
-- Vand 9 dl,
-- Hvidløgsbrød 1 stk
-- Ris 150 gram
-- Kyllingebryst 1 stk,
-- Peberfrugt 1 stk,
-- Hvidløg 1 fed,
-- Lime 1 stk,
-- Soja 1 spsk,
-- Fishsauce 2 spsk
+Denne uges indkoebsliste
+ - Kartofler 500 gram
+ - Porrer 3 stk,
+ - Hvidloeg 1 fed,
+ - Groentsagsbouillon 12 dl,
+ - Soyamaelk 1 dl
+ - Spaghetti 400 gram
+ - Loeg 1 stk,
+ - Champignon 150 gram,
+ - Timian 1 tsk,
+ - Paprika 1 tsk,
+ - Tomatpuré 200 gram,
+ - Squash 1 stk
+ - Squash 3 stk
+ - Kartofler 100 gram,
+ - Ris 3 dl,
+ - Hvidloeg 1 fed,
+ - Tomat 8 stk,
+ - Oliven 1 glas
+ - Kartofler 300 gram
+ - Aubergine 1 stk,
+ - Loeg 1 stk,
+ - Karry 2 spsk,
+ - Draenede-kikaerter 250 gram,
+ - Kokosmaelk 1 daase,
+ - Hakkede-tomater 1 daase
+ - Ris 150 gram
+ - Kyllingebryst 1 stk,
+ - Peberfrugt 1 stk,
+ - Hvidloeg 1 fed,
+ - Lime 1 stk,
+ - Soja 1 spsk,
+ - Fishsauce 2 spsk
+ - Wienerpoelser 3 stk
+ - Loeg 1 stk,
+ - Kartofler 300 gram,
+ - Maelk 2 dl,
+ - Floede 1 dl,
+ - Tomatpuré 150 gram,
+ - Paprika 1 tsk
+ - Broccoli 1 stk
+ - Loeg 1 stk,
+ - Hvidloeg 2 fed,
+ - Spinat 200 gram,
+ - Groentsagsbouillon 6 dl,
+ - Butterbeans 1 daase,
+ - Brune-champignon 250 gram
