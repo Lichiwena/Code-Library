@@ -8,10 +8,10 @@
 
 /*Foerste funktion der bliver kaldt*/
 int main(void){
-    FILE *pinputFile = fopen("data.txt", "r");  /*Finder inputfilen*/
-    FILE *p2inputFile = fopen("data.txt", "r"); /*aabner input filen en anden gang til dynamisk lager allokering*/
-    FILE *p3inputFile = fopen("data.txt", "r"); /*Smart tekst*/
-    FILE *psettingsFile = fopen("settings.txt", "r");
+    FILE *pinputFile = fopen(INPUTFILE, "r");  /*Finder inputfilen*/
+    FILE *p2inputFile = fopen(INPUTFILE, "r"); /*aabner input filen en anden gang til dynamisk lager allokering*/
+    FILE *p3inputFile = fopen(INPUTFILE, "r"); /*Smart tekst*/
+    FILE *psettingsFile = fopen(SETTINGSFILE, "r");
     int checkForEOF = getc(pinputFile); /*laeser foerste linje af inputfilen og saetter den checkForEOF til 1 hvis den kan laese en linje*/
     int databaseIndex = 0;
     int i = 0;
@@ -46,10 +46,10 @@ int main(void){
     }
     
     if (psettingsFile == NULL){
-        psettingsFile = fopen("settings.txt", "w");
+        psettingsFile = fopen(SETTINGSFILE, "w");
         user_settings(psettingsFile, numberOfRecipes);
         fclose(psettingsFile);
-        psettingsFile = fopen("settings.txt", "r");
+        psettingsFile = fopen(SETTINGSFILE, "r");
         read_settings(psettingsFile);
     }
     else{
@@ -218,15 +218,19 @@ void read_data(FILE *input, int databaseIndex){
 
 /*Menu til brugeren kan vaelge funktioner*/
 void menu(FILE *psettingsFile, int numberOfRecipes){
-    FILE *poutFile = fopen("madplan.txt", "w"); /*Laver inputfilen*/
-    int userInput = 0, checkValue = 0, randomValue[7], tempValue[7], weekdayIndex = 0, ingredientsIndex = 0;
-    printf("Velkommen til den digitale madplan\n");
-    printf("Hvad kunne du taenke dig at goere? Tast et tal fra 1 til 3\n");
-    printf("1. Udskriv en madplan\n");
-    printf("2. Aendre indstillinger\n");
-    printf("3. Luk programmet\n");
+    FILE *poutFile = fopen(OUTPUTFILE, "w"); /*Laver inputfilen*/
+    int checkValue = 0, randomValue[7], tempValue[7], weekdayIndex = 0, ingredientsIndex = 0;
+    int userInput = 0;
+    printf("################################################################\n");
+    printf("## Velkommen til den digitale madplan                         ##\n");
+    printf("## Hvad kunne du taenke dig at goere? Tast et tal fra 1 til 3 ##\n");
+    printf("## Tast '1' for at udskrive en madplan                        ##\n"); 
+    printf("## Tast '2' for at aendre indstillinger                       ##\n");
+    printf("## Tast '3' for at lukke programmet                           ##\n");
+    printf("################################################################\n");
     scanf("%d", &userInput);
     if (userInput == 1){
+        clear_screen();
         for (checkValue = 0; checkValue < 7;)
         {
             randomValue[checkValue] = rand() % (numberOfRecipes - 1);
@@ -234,7 +238,7 @@ void menu(FILE *psettingsFile, int numberOfRecipes){
                 (randomValue[checkValue] != tempValue[checkValue + 3]) && (randomValue[checkValue] != tempValue[checkValue + 4]) && (randomValue[checkValue] != tempValue[checkValue + 5]) &&
                 (randomValue[checkValue] != tempValue[checkValue + 6]))
             {
-                print_meal_plan(poutFile, weekdayIndex, randomValue[weekdayIndex]);
+                print_meal_plan(poutFile, weekdayIndex, randomValue[weekdayIndex], numberOfRecipes);
                 make_ingredients(randomValue[weekdayIndex], ingredientsIndex);
                 checkValue++;
                 weekdayIndex++;
@@ -246,16 +250,19 @@ void menu(FILE *psettingsFile, int numberOfRecipes){
         fclose(poutFile);
     }
     else if (userInput == 2){
-        psettingsFile = fopen("settings.txt", "w");
+        clear_screen();
+        psettingsFile = fopen(SETTINGSFILE, "w");
         user_settings(psettingsFile, numberOfRecipes);
-        fclose(psettingsfile);
-        fopen("settings.txt", "r");
+        fclose(psettingsFile);
+        fopen(SETTINGSFILE, "r");
     }
     else if (userInput == 3){
+        clear_screen();
         EXIT_SUCCESS;
     }
     else{
         error(1);
+        fflush(stdin);
         menu(psettingsFile, numberOfRecipes);
     }
 }
@@ -263,10 +270,10 @@ void menu(FILE *psettingsFile, int numberOfRecipes){
 /*Funktion til at "lave" ingridenser*/
 void make_ingredients(int databaseIndex, int ingredientsIndex){
     ingredients newIngredients[MAX_ARRAY_LENGTH][MAX_CHAR_LENGTH]; /*Bruger ingrediens structen til at lave en variable*/
-    FILE *pshoppingList = fopen("shopping_list.txt", "w");
-    char localName[15][MAX_CHAR_LENGTH];
-    double localAmount[15];
-    char localUnit[15][MAX_CHAR_LENGTH];
+    FILE *pshoppingList = fopen(SHOPPINGLIST, "w");
+    char localName[MAX_AMOUNT_OF_INGREDIENTS][MAX_CHAR_LENGTH];
+    double localAmount[MAX_AMOUNT_OF_INGREDIENTS];
+    char localUnit[MAX_AMOUNT_OF_INGREDIENTS][MAX_CHAR_LENGTH];
     char clear[] =  " ";
     int i = 0, k = 0, wipe;
     
@@ -346,12 +353,12 @@ void print_grocery_list(FILE *shoppingList, ingredients ingredientsArray[MAX_ARR
 }
 
 /*Funktion til at udvaelge hvilken madplan der skal printes*/
-void print_meal_plan(FILE *output, int weekdayIndex, int databaseIndex){
-    if (settings.vegetarian == TRUE){
-        print_vegetarian_meal_plan();
+void print_meal_plan(FILE *output, int weekdayIndex, int databaseIndex, int numberOfRecipes){
+    if (settings.vegan == FALSE && (settings.vegetarian == TRUE)){
+        print_vegetarian_meal_plan(output, weekdayIndex, databaseIndex, numberOfRecipes);
     }
     else if (settings.vegan == TRUE){
-        print_vegan_meal_plan();
+        print_vegan_meal_plan(output, weekdayIndex, databaseIndex, numberOfRecipes);
     }
     else{
         print_standard_meal_plan(output, weekdayIndex, databaseIndex);
@@ -359,20 +366,101 @@ void print_meal_plan(FILE *output, int weekdayIndex, int databaseIndex){
 }
 
 /*Printer en vegantarisk madplan*/
-void print_vegetarian_meal_plan(){
+void print_vegetarian_meal_plan(FILE *output, int weekdayIndex, int databaseIndex, int numberOfRecipes){
     char weekdays[7][10] = {"Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Loerdag", "Soendag"};
+    int i = 0;
+    int *vegeetarian_array = malloc(sizeof(int) * numberOfRecipes);
 
+    if ((weekdays[weekdayIndex] == weekdays[1]) || (weekdays[weekdayIndex] == weekdays[3])
+         || (weekdays[weekdayIndex] == weekdays[5]) || (weekdays[weekdayIndex] == weekdays[6])){
+        fprintf(output, "###############################################################\n");
+        fprintf(output, "########################### %s ###########################\n", weekdays[weekdayIndex]);
+        printf("###############################################################\n");
+        printf("########################### %s ###########################\n", weekdays[weekdayIndex]);
+    }
+    else{
+        fprintf(output, "###############################################################\n");
+        fprintf(output, "########################### %s ############################\n", weekdays[weekdayIndex]);
+        printf("###############################################################\n");
+        printf("########################### %s ############################\n", weekdays[weekdayIndex]);
+    }
+    
+    if (database.vegetarian[databaseIndex] == TRUE){
+        vegeetarian_array[i] = database.indexNumber[databaseIndex];
+    }
+    else
+    {
+        while (database.vegetarian[databaseIndex] != TRUE)
+        {
+            databaseIndex++;
+        }
+        vegeetarian_array[i] = database.indexNumber[databaseIndex];
+    }
+
+    printf("%s\n", database.title[vegeetarian_array[i]]);
+    fprintf(output, "%s\n", database.title[vegeetarian_array[i]]);
+    fprintf(output, "%s\n", database.description[vegeetarian_array[i]]);
+    fprintf(output, "%s\n", database.ingredients[vegeetarian_array[i]]);
+    fprintf(output, "Denne ret er vegetarisk\n");
+    fprintf(output, "Denne ret er vegansk\n");
+    printf("Prisklasse: %d\n", database.price[vegeetarian_array[i]]);
+    fprintf(output, "Prisklasse: %d\n", database.price[vegeetarian_array[i]]);
+    printf("Tid: %d minutter\n", database.time[vegeetarian_array[i]]);
+    fprintf(output, "Tid: %d minutter\n", database.time[vegeetarian_array[i]]);
+
+    free(vegeetarian_array);
 }
 
 /*Printer en vegansk madplan*/
-void print_vegan_meal_plan(){
+void print_vegan_meal_plan(FILE *output, int weekdayIndex, int databaseIndex, int numberOfRecipes){
     char weekdays[7][10] = {"Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Loerdag", "Soendag"};
+    int i = 0;
+    int *vegan_array = malloc(sizeof(int) * numberOfRecipes);
 
+    if ((weekdays[weekdayIndex] == weekdays[1]) || (weekdays[weekdayIndex] == weekdays[3])
+         || (weekdays[weekdayIndex] == weekdays[5]) || (weekdays[weekdayIndex] == weekdays[6])){
+        fprintf(output, "###############################################################\n");
+        fprintf(output, "########################### %s ###########################\n", weekdays[weekdayIndex]);
+        printf("###############################################################\n");
+        printf("########################### %s ###########################\n", weekdays[weekdayIndex]);
+    }
+    else{
+        fprintf(output, "###############################################################\n");
+        fprintf(output, "########################### %s ############################\n", weekdays[weekdayIndex]);
+        printf("###############################################################\n");
+        printf("########################### %s ############################\n", weekdays[weekdayIndex]);
+    }
+    
+    if (database.vegan[databaseIndex] == TRUE){
+        vegan_array[i] = database.indexNumber[databaseIndex];
+    }
+    else
+    {
+        while (database.vegan[databaseIndex] != TRUE)
+        {
+            databaseIndex++;
+        }
+        vegan_array[i] = database.indexNumber[databaseIndex];
+    }
+
+    printf("%s\n", database.title[vegan_array[i]]);
+    fprintf(output, "%s\n", database.title[vegan_array[i]]);
+    fprintf(output, "%s\n", database.description[vegan_array[i]]);
+    fprintf(output, "%s\n", database.ingredients[vegan_array[i]]);
+    fprintf(output, "Denne ret er vegetarisk\n");
+    fprintf(output, "Denne ret er vegansk\n");
+    printf("Prisklasse: %d\n", database.price[vegan_array[i]]);
+    fprintf(output, "Prisklasse: %d\n", database.price[vegan_array[i]]);
+    printf("Tid: %d minutter\n", database.time[vegan_array[i]]);
+    fprintf(output, "Tid: %d minutter\n", database.time[vegan_array[i]]);
+
+    free(vegan_array);
 }
 
 /*Funktion til at lave madplan filen*/
 void print_standard_meal_plan(FILE *output, int weekdayIndex, int databaseIndex){
     char weekdays[7][10] = {"Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Loerdag", "Soendag"};
+    
     /* Hvis weekdays[weekdayIndex] er Tirs, Tors, Loer el. Soen saa skal den printe et # mindre, */
     /* fordi disse dage er ét tegn laengere end resten af ugens dage, saa det ser paent ud.     */
     if ((weekdays[weekdayIndex] == weekdays[1]) || (weekdays[weekdayIndex] == weekdays[3])
@@ -392,24 +480,18 @@ void print_standard_meal_plan(FILE *output, int weekdayIndex, int databaseIndex)
     fprintf(output, "%s\n", database.description[databaseIndex]);
     fprintf(output, "%s\n", database.ingredients[databaseIndex]);
     printf("%s\n", database.title[databaseIndex]);
-    printf("%s\n", database.description[databaseIndex]);
-    printf("%s\n", database.ingredients[databaseIndex]);
 
     if (database.vegetarian[databaseIndex] == FALSE){
         fprintf(output, "Denne ret er ikke vegetarisk\n");
-        printf("Denne ret er ikke vegetarisk\n");
     }
     else{
         fprintf(output, "Denne ret er vegetarisk\n");
-        printf("Denne ret er vegetarisk\n");
     }
     if (database.vegan[databaseIndex] == FALSE){
         fprintf(output, "Denne ret er ikke vegansk\n");
-        printf("Denne ret er ikke vegansk\n");
     }
     else{
         fprintf(output, "Denne ret er vegansk\n");
-        printf("Denne ret er vegansk\n");
     }
     fprintf(output, "Prisklasse: %d\n", database.price[databaseIndex]);
     fprintf(output, "Tid: %d minutter\n", database.time[databaseIndex]);
@@ -420,18 +502,25 @@ void print_standard_meal_plan(FILE *output, int weekdayIndex, int databaseIndex)
 /*Spoerger brugeren om vedkommende er tilfreds*/
 int satisfied_with_mealplan(FILE *output, int numberOfRecipes){
     char krit1[255], krit2[255], satisfied;
-    int newRandomIndex = -1, weekday;
+    int newRandomIndex = -1;
+    int weekday = 0;
     srand(time(NULL));
 
+    printf("\nFlere informationer om madplanen findes i madplan.txt-filen, blandt andet opskrifter.\n");
     printf("Er du tilfreds med din madplan? J/N \n");
     scanf(" %c", &satisfied);
 
     if (satisfied == 'N' || satisfied == 'n'){
-        printf("\n Du har valgt at du ikke er tilfreds. \nHvilken dag er du ikke tilfreds med? (nummer paa dagen)\n");
-        scanf(" %d", &weekday);
+        printf("\nDu har valgt, at du ikke er tilfreds. \nHvilken dag er du ikke tilfreds med? (Indtast nummer paa dagen)\n");
+        scanf("%d", &weekday);
+        while(weekday > 7 || weekday < 1){
+            error(1);
+            fflush(stdin);
+            scanf("%d", &weekday);
+        }
 
         while (newRandomIndex == -1){
-            printf("Hvilke ingredienser oensker du at inddrage i opskriften? Indtast to\n");
+            printf("Hvilke ingredienser oensker du at inddrage i opskriften? Indtast to:\n");
             scanf(" %s %s", krit1, krit2);
             newRandomIndex = find_new_dish(krit1, krit2, numberOfRecipes);
             if (newRandomIndex == -1){
@@ -439,15 +528,20 @@ int satisfied_with_mealplan(FILE *output, int numberOfRecipes){
             }
         }
         weekday -= 1;
-        print_meal_plan(output, weekday, newRandomIndex);
+        print_meal_plan(output, weekday, newRandomIndex, numberOfRecipes);
     }
+    else if (satisfied != 'N' && satisfied != 'n' && satisfied != 'J' && satisfied != 'j'){
+        error(1);
+        satisfied_with_mealplan(output, numberOfRecipes);
+    }
+    
     return 0;
 }
 
 /*Hvis brugeren er utilfreds spoerger og aendre denne funktion*/
 int find_new_dish(char krit1[], char krit2[], int numberOfRecipes){
-    int i = 0, j = 0;
-    int tempIndex[numberOfRecipes];
+    int i = 0;
+    int tempIndex[MAX_ARRAY_LENGTH];
     int tempRandom = -1;
 
     for (i = 0; i < numberOfRecipes; i++){
@@ -468,4 +562,14 @@ int find_new_dish(char krit1[], char krit2[], int numberOfRecipes){
         }
     }
     return tempRandom;
+}
+
+void clear_screen(){
+    #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+        system("clear");
+    #endif
+
+    #if defined(_WIN32) || defined(_WIN64)
+        system("cls");
+    #endif
 }

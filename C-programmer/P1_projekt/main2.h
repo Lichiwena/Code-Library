@@ -3,11 +3,6 @@
 #define TRUE 1
 #define MAX_CHAR_LENGTH 140
 #define MAX_ARRAY_LENGTH 50
-#define MAX_AMOUNT_OF_INGRIDENTS 7
-#define INPUTFILE "data.txt"
-#define SETTINGSFILE "settings.txt"
-#define OUTPUTFILE "madplan.txt"
-#define SHOPPINGLIST "shopping_list.txt"
 
 struct settings{
     int vegan;
@@ -44,9 +39,9 @@ void menu(FILE *psettingsFile, int numberOfRecipes);
 void make_ingredients(int databaseIndex, int ingredientsIndex);
 void print_grocery_list(FILE *shoppingList, ingredients ingredientsArray[MAX_ARRAY_LENGTH][MAX_CHAR_LENGTH]);
 void print_meal_plan(FILE *output, int weekdayIndex, int databaseIndex, int numberOfRecipes);
-void print_vegetarian_meal_plan(FILE *output, int weekdayIndex, int databaseIndex, int numberOfRecipes);
+void print_vegetarian_meal_plan();
 void print_vegan_meal_plan(FILE *output, int weekdayIndex, int databaseIndex, int numberOfRecipes);
 void print_standard_meal_plan(FILE *output, int weekdayIndex, int databaseIndex);
-int satisfied_with_mealplan(FILE *output, int numberOfRecipes);
-int find_new_dish(char krit1[], char krit2[], int numberOfRecipes);
+int  satisfied_with_mealplan(FILE *output, int numberOfRecipes);
+int  find_new_dish(char krit1[], char krit2[], int numberOfRecipes);
 void clear_screen();
