@@ -15,12 +15,18 @@ void make_ingredients
 Scanner database.ingredients på current indexnumber. Gemmes i en variabel localName, localAmount og localUnit. 
 &localAmount har en ampersand, fordi det er en double.
 
-Wipe funktion: Hvis der ikke er 7 ingredienser i en ret, så vil de gamle ingredienser blive gemt. F.eks. i Ret 2, så er der kun 2 ingredienser.
+Wipe funktion: Hvis der ikke er 8 ingredienser i en ret, så vil de gamle ingredienser blive gemt. F.eks. i Ret 2, så er der kun 2 ingredienser.
 Så er de gamle ingredienser for 3, 4, 5, 6, og 7 gemt i denne. Derfor skal de wipes med denne funktion. clear sætter bare ting til mellemrum.
 strcpy(localName[wipe]) = clear = den første string (ingrediens navn) wipes og sættes til mellemrum. Doublen sættes til 0. Den sidste string sættes også til mellemrum.
+
+void menu
+random velue og check value: Tjekker at alle værdierne ikke er de samme, så man ikke får de samme retter.
 
 void print_grocery_list
 Comparer Opskrift 1 og Opskrift 2s første elementer. Hvis navnene er de samme (stringcopy er 0), så adderes amount sammen.
 Tallet 8 er hardcoded fordi det virker. Indkøbslisten kombinerer ikke tingene alligevel.
 Måske er det fordi, den kun komparer Ingrediens nr. 1 i Opskrift 1 med Ingrediens nr. 1 i Opskrift 2. Den comparer måske ikke med alle.
 
+void print_vegetarian_meal_plan
+if database.vegetarian[i] er TRUE (retten er vegetarisk), så gem indexnummeret på retten.
+ELLERS så tjek det næste indexnummer og tjek om det er true (det er inde i et while loop, så det bliver ved med at gøre, til den finder en vegetarisk ret)
