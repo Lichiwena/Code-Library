@@ -2,8 +2,8 @@ let chessboardBlank =  " ";
 let chessboardHash  =  "#";
 let newline         = "\n";
 let chessboardString = "" ;
-let size1 = 16;
-let size2 = 32;
+let size1 = 16; //Antal linjer
+let size2 = 32; //Antal tegn pr. linje
 
 for (let i = 0; i < size1; i++)
 {
@@ -26,4 +26,4 @@ function fill_in_line()
         }
 }
 
-document.write("This is my website hello");
+document.write("This is my website hello and I am live");
