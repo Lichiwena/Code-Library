@@ -338,7 +338,7 @@ void print_grocery_list(FILE *shoppingList, ingredients ingredientsArray[MAX_ARR
             if (strcmp(ingredientsArray[j][i].name, ingredientsArray[j+1][i].name) == 0 && (ingredientsArray[j][i].amount != 0)){
                 ingredientsArray[j+1][i].amount += ingredientsArray[j][i].amount;
                 ingredientsArray[j][i].amount = 0;
-            }
+            }   
         }   
     }*/
     for (j = 0; j < 8; j++){

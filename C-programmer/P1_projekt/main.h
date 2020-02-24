@@ -3,7 +3,7 @@
 #define TRUE 1
 #define MAX_CHAR_LENGTH 140
 #define MAX_ARRAY_LENGTH 50
-#define MAX_AMOUNT_OF_INGRIDENTS 7
+#define MAX_AMOUNT_OF_INGREDIENTS 7
 #define INPUTFILE "data.txt"
 #define SETTINGSFILE "settings.txt"
 #define OUTPUTFILE "madplan.txt"
