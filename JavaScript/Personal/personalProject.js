@@ -8,10 +8,7 @@ let quoteArray = [
 "Lad være med at løfte mig"
 ]
 
-let sarahImage = document.getElementById("sarahpicture");
-
-function getRandomIndex(quoteArray)
-{
+function getRandomIndex(quoteArray){
     let tempRandomNumber = Math.random()*quoteArray.length;
     return Math.floor(tempRandomNumber);
 }
@@ -20,9 +17,10 @@ let dailyQuote = quoteArray[getRandomIndex(quoteArray)];
 
 document.getElementById("dailyQuote").innerHTML = `<h2> ${dailyQuote} - Sarah </h2>`
 
+let sarahImage = document.getElementById("sarahpicture");
+
 // A function that changes picture on click
-function changeImage()
-{
+function changeImage(){
     if (sarahImage.src.includes("sarah.jpg"))
     { 
         sarahImage.src = "sarah2.jpg";
@@ -33,17 +31,14 @@ function changeImage()
 
 let imageTimer = null;
 
-function setTimer()
-{
-    imageTimer = setTimeout(function () {
-        alert("HEY YOU");
-    },
-    4000);
+function setTimer(){
+    imageTimer = setTimeout(function (){
+        alert("HEY YOU")},
+        4000);
 }
 
-function clearTimer()
-{
-    if (imageTimer != null) {
+function clearTimer(){
+    if (imageTimer != null){
         clearTimeout(imageTimer);
         imageTimer = null;
     }
