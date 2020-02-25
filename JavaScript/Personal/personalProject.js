@@ -4,8 +4,11 @@ let quoteArray = [
 "Ikke flere colaer Johan!!!",
 "Hvem er hun? (random pige på Johans Facebook)",
 "I want to go snoogie",
-"Look at hims! (any cute animal on Twitter)"
+"Look at hims! (any cute animal on Twitter)",
+"Lad være med at løfte mig"
 ]
+
+let sarahImage = document.getElementById("sarahpicture");
 
 function getRandomIndex(quoteArray)
 {
@@ -17,12 +20,31 @@ let dailyQuote = quoteArray[getRandomIndex(quoteArray)];
 
 document.getElementById("dailyQuote").innerHTML = `<h2> ${dailyQuote} - Sarah </h2>`
 
+// A function that changes picture on click
 function changeImage()
 {
-    if (document.getElementById("sarahpicture").src == "http://127.0.0.1:5500/Personal/sarah.jpg")
+    if (sarahImage.src.includes("sarah.jpg"))
     { 
-        document.getElementById("sarahpicture").src = "http://127.0.0.1:5500/Personal/sarah2.jpg";
+        sarahImage.src = "sarah2.jpg";
     } else {
-        document.getElementById("sarahpicture").src = "http://127.0.0.1:5500/Personal/sarah.jpg";
+        sarahImage.src = "sarah.jpg";
+    }
+}
+
+let imageTimer = null;
+
+function setTimer()
+{
+    imageTimer = setTimeout(function () {
+        alert("HEY YOU");
+    },
+    4000);
+}
+
+function clearTimer()
+{
+    if (imageTimer != null) {
+        clearTimeout(imageTimer);
+        imageTimer = null;
     }
 }
