@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
@@ -5,4 +6,13 @@
       "C:\\Users\\JørnErik\\.nuget\\packages"
     ]
   }
+=======
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\JørnErik\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\JørnErik\\.nuget\\packages"
+    ]
+  }
+>>>>>>> 9eae1d800fc85dfe6438499f5c1899e9f9da0a2e
 }
