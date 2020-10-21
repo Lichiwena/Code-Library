@@ -1,0 +1,29 @@
+<<<<<<< HEAD
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\bin\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.exe
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\bin\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.deps.json
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\bin\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.runtimeconfig.json
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\bin\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.runtimeconfig.dev.json
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\bin\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.dll
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\bin\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.pdb
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\obj\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.csprojAssemblyReference.cache
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\obj\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.AssemblyInfoInputs.cache
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\obj\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.AssemblyInfo.cs
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\obj\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.csproj.CoreCompileInputs.cache
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\obj\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.dll
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\obj\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.pdb
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\obj\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.genruntimeconfig.cache
+=======
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\bin\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.exe
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\bin\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.deps.json
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\bin\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.runtimeconfig.json
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\bin\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.runtimeconfig.dev.json
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\bin\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.dll
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\bin\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.pdb
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\obj\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.csprojAssemblyReference.cache
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\obj\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.AssemblyInfoInputs.cache
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\obj\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.AssemblyInfo.cs
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\obj\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.csproj.CoreCompileInputs.cache
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\obj\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.dll
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\obj\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.pdb
+D:\Code-Library\OOP\Opgaveregning\Opgaveregning01_11.09.20\Opgaveregning01_11.09.20\obj\Debug\netcoreapp3.1\Opgaveregning01_11.09.20.genruntimeconfig.cache
+>>>>>>> 9eae1d800fc85dfe6438499f5c1899e9f9da0a2e
